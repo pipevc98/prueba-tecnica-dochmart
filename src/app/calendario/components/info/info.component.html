@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <h4 class="modal-title">Reservacion</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+    <div class="d-flex gap-2">
+        <p class="fw-bold">Nombre: </p> <span class="text-capitalize">{{info.event._def.extendedProps.nombre}}</span>
+    </div>
+    <div class="d-flex gap-2">
+        <p class="fw-bold">Telefono: </p> <span class="text-capitalize">{{info.event._def.extendedProps.telefono}}</span>
+    </div>
+    <div class="d-flex gap-2">
+        <p class="fw-bold">Email: </p> <span>{{info.event._def.extendedProps.email}}</span>
+    </div>
+
+    
+    
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger" (click)="onDeleteReserva(info.event._def.publicId)">Eliminar</button>
+    <button type="button" class="btn btn-primary" (click)="activeModal.close('Close click')">Cerrar</button>
+</div>

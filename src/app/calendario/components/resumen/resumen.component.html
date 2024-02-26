@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h4 class="modal-title">Reservacion</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="onReload()"></button>
+</div>
+<div class="modal-body">
+    <div class="d-flex gap-2">
+        <p class="fw-bold">Nombre: </p> <span class="text-capitalize">{{info.nombre}}</span>
+    </div>
+    <div class="d-flex gap-2">
+        <p class="fw-bold">Telefono: </p> <span class="text-capitalize">{{info.telefono}}</span>
+    </div>
+    <div class="d-flex gap-2">
+        <p class="fw-bold">Email: </p> <span>{{info.email}}</span>
+    </div>
+    
+    <div class=" d-flex mb-3 gap-2">
+        <p class="fw-bold">Fecha:</p> <span>{{info.date.slice(0,10)}}</span> <p class="fw-bold">Hora:</p> <span>{{info.date.slice(11,16)}}</span>
+    </div>
+    
+</div>
+<div class="modal-footer">
+    
+    <button type="button" class="btn btn-primary" (click)="onReload()">Confirmar</button>
+</div>

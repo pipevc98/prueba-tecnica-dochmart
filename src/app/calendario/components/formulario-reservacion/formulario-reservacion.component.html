@@ -1,0 +1,26 @@
+<form autocomplete="off"  [formGroup]="reservaForm" (ngSubmit)="onSubmit()"  >
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="John Doe">
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Correo Electronico</label>
+        <input type="email" class="form-control" id="email" formControlName="email" placeholder="name@example.com">
+    </div>
+
+    <div class="mb-3">
+        <label for="telefono" class="form-label">Numero de Telefono</label>
+        <input type="tel" class="form-control" id="telefono" formControlName="telefono" placeholder="55xxxxxx">
+    </div>
+
+    <div class=" d-flex mb-3 gap-2">
+        <p class="fw-bold">Fecha:</p> <span>{{info.dateStr.slice(0,10)}}</span> <p class="fw-bold">Hora:</p> <span>{{info.dateStr.slice(11,16)}}</span>
+    </div>
+
+    <div class="modal-footer">
+        
+        <button [disabled]="reservaForm.invalid"  (click)="activeModal.close('Close click')"  class="btn btn-primary">Enviar</button>
+    </div>
+
+</form>
