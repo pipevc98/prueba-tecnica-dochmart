@@ -4,10 +4,8 @@
 
 
 
-  .avalible-day{
-    background-color: '#F78181';
-  }
+.my-class {
+  width: 80px; /* Sets a fixed width of 100 pixels */
+  height: 25px;
+}
 
-  .full-day{
-    background-color: '#CEF6CE';
-  }
