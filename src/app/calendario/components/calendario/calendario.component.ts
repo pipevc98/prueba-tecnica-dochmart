@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 
 import { CalendarioService } from '../../services/calendario-service.service';
 
-
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DiaComponentComponent } from '../dia-component/dia-component.component';
+import { infoComponent } from '../info/info.component';
 
 import { CalendarOptions, DayCellContentArg } from '@fullcalendar/core';
 import { FullCalendarComponent } from '@fullcalendar/angular';
@@ -15,8 +15,7 @@ import esLocale from '@fullcalendar/core/locales/es'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import bootstrap5Plugin from '@fullcalendar/bootstrap5'
 
-import { infoComponent } from '../info/info.component';
-import { reduce, throwIfEmpty } from 'rxjs';
+
 
 
 @Component({
@@ -24,17 +23,24 @@ import { reduce, throwIfEmpty } from 'rxjs';
   templateUrl: './calendario.component.html',
   styles: []
 })
-export class CalendarioComponent implements OnInit{
+export class CalendarioComponent implements OnInit, AfterViewChecked{
+
+  public reservaciones: any[] = []
 
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
 
-  constructor( private calendarioService: CalendarioService, private modalService: NgbModal) {
+  constructor( private calendarioService: CalendarioService, private modalService: NgbModal, ) {
   }
 
   //Inicializar los datos de la api
   ngOnInit(): void {
     this.getReservaciones();  
   }
+
+  ngAfterViewChecked(): void {
+    // this.calendarOptions.dayCellDidMount = (arg) =>{ this.fechasDisplonibles(arg) }
+  }
+
 
 
   //funcion para hacer el get a la api
@@ -48,10 +54,10 @@ export class CalendarioComponent implements OnInit{
         nombre: data.nombre,
         email: data.email,
         date: data.date,
-        groupById: data.date.slice(0, 10),
-        allDay: false,
+        // display: 'background'
       }));
       this.calendarOptions.events = events
+      
     });
   }
 
@@ -71,45 +77,28 @@ export class CalendarioComponent implements OnInit{
 		modalRef.componentInstance.info = arg;
   }
   // Cambiar de color segun si hay fechas disponibles o no
-  fechasDisplonibles( info: DayCellContentArg ) {
-
-  
-
-    const things = this.calendarOptions.dayCellDidMount = (info) => {
-
-      const fecha = info.date;
-
-      // console.log(fecha)
-
-      const eventosDelDia = this.calendarComponent.getApi().getEvents().filter( (evento: any) => {
-        
-        return evento.start!.toDateString() === fecha.toDateString();
-        
-      });
-
-      console.log(eventosDelDia)
-
-      var stuff = ''
+  fechasDisplonibles( info: any = [] ) {
     
-      if(eventosDelDia.length > 11 ) {
-        stuff =  'fc-day1'
-      } else {
-        stuff = 'fc-day'
-      }
+    const fecha = info.date
 
-      // console.log(stuff)
-      return stuff
+    const eventosDelDia = this.calendarComponent.getApi().getEvents().filter( (evento: any) => {
+    
+      return evento.start!.toDateString() === fecha.toDateString();
+      
+    });
+    
 
+    const cell = info.el
+
+    if(eventosDelDia.length > 11){
+      cell.style.backgroundColor = '#F78181'
+    }else {
+      cell.style.backgroundColor =  '#CEF6CE'
     }
 
-    // 
-
-    console.log(things)
-    
-    
-    
-    
   }
+
+  
 
   //Configuaracion del calendario
   calendarOptions: CalendarOptions = ({
@@ -118,7 +107,8 @@ export class CalendarioComponent implements OnInit{
       interactionPlugin, 
       listPlugin, 
       timeGridPlugin,
-      bootstrap5Plugin 
+      bootstrap5Plugin,
+      
     ],
     themeSystem: 'bootstrap5',
     initialView: 'dayGridMonth',
@@ -127,9 +117,9 @@ export class CalendarioComponent implements OnInit{
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      right: 'dayGridMonth,timeGridDay,listWeek'
     },
-    dayCellDidMount: (info) => this.fechasDisplonibles(info),
+    
     weekends: true,
     dayMaxEvents: 0,
     eventClick: this.onShowReserva.bind(this),
@@ -145,6 +135,7 @@ export class CalendarioComponent implements OnInit{
     slotMaxTime: '19:00:00',
     allDaySlot: false,
     eventMaxStack: 1,
+    dayCellDidMount: (arg) => this.fechasDisplonibles(arg),
     views: {
       timeGridDay: {
         plugins: [interactionPlugin, timeGridPlugin],
@@ -156,6 +147,7 @@ export class CalendarioComponent implements OnInit{
       },
       dayGridMonth: {
         dateClick: this.onShowDay.bind(this),
+        defaultAllDayEventDuration: 12
       },
 
     },
